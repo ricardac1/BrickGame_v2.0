@@ -11,22 +11,11 @@ TEST_CPP_FILES := $(wildcard $(TEST_DIR)/*.cpp)
 EXE = test.out
 PROJECT_NAME=BrickGame_v2.0
 BACKEND_TETRIS=brick_game/tetris
+BACKEND_SNAKE=brick_game/snake
 MODEL_SNAKE=$(BACKEND_SNAKE)/model
 CONTROLLER_SNAKE=$(BACKEND_SNAKE)/controller
 FRONTEND_CLI=gui/cli
 
-# GTEST_PATH = $(shell brew --prefix googletest)
-# INCLUDES = -I$(GTEST_PATH)/include
-# GCC_FLAGS += $(INCLUDES)
-
-# # Поиск всех файлов .cpp во всех SRC_DIRS
-# SRC_CPP_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
-
-# # Создание списка объектных файлов, сохраняя структуру директорий
-# OBJS_CPP_FILES := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(SRC_CPP_FILES))
-
-# # Создание списка объектных файлов для тестов с указанием пути
-# OBJS_TEST_FILES := $(patsubst %.cpp, $(TEST_OBJ_DIR)/%.o, $(notdir $(TEST_CPP_FILES)))
 
 OS := $(shell uname)
 
@@ -43,20 +32,20 @@ all: clean install
 
 install: clean cli desktop
 
-cli: libtetris.a #libsnake.a
+cli: libtetris.a libsnake.a
 	mkdir build
-	gcc $(GCC_FLAGS) -c $(FRONTEND_CLI)/*.c -lncurses 
-	g++ $(G++_FLAGS) -c $(FRONTEND_CLI)/*.cpp -lncurses 
-	cd build && g++ $(G++_FLAGS) -o $(PROJECT_NAME)_cli ../*.o  -lncurses -L./.. -ltetris # -lsnake 
+	gcc $(GCC_FLAGS) -c $(FRONTEND_CLI)/*.c -lncurses -g
+	g++ $(G++_FLAGS) -c $(FRONTEND_CLI)/*.cpp -lncurses -g
+	cd build && g++ $(G++_FLAGS) -o $(PROJECT_NAME)_cli ../*.o  -lncurses -L./.. -ltetris  -lsnake -g
 	rm -rf *.o *.a
 
-# libsnake.a:
-# 	g++ $(GCC_FLAGS) -c $(MODEL_SNAKE)/*.cpp $(CONTROLLER_SNAKE)/*.cpp
-# 	ar rc libsnake.a *.o
-# 	rm -rf *.o
+libsnake.a:
+	g++ $(G++_FLAGS) -c $(MODEL_SNAKE)/*.cpp $(CONTROLLER_SNAKE)/*.cpp -g
+	ar rc libsnake.a *.o
+	rm -rf *.o
 
 libtetris.a:
-	gcc $(GCC_FLAGS) -c $(BACKEND_TETRIS)/*.c
+	gcc $(GCC_FLAGS) -c $(BACKEND_TETRIS)/*.c -g
 	ar rc libtetris.a *.o
 	rm -rf *.o
 

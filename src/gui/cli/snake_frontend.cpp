@@ -2,13 +2,15 @@
 
 namespace s21 {
 
+SnakeNcurses::SnakeNcurses(Controller *c) : controller{c} {};
+SnakeNcurses::~SnakeNcurses() {};
 void SnakeNcurses::startSnake() {
   WINDOW *field = newwin(22, 22, 0, 0);
   WINDOW *info = newwin(22, 18, 0, 22);
   int key = 0;
   while (key != 27) {
     key = getch();
-    GameInfo_t display;
+    GameInfo_t display = controller->updateCurrentState();
     UserAction_t user_input = keyAction(key);
     drawField(field, display);
     drawInfo(info, display);
@@ -56,30 +58,32 @@ UserAction_t SnakeNcurses::keyAction(int key) {
 void SnakeNcurses::drawField(WINDOW *field, GameInfo_t game) {
   werase(field);
   box(field, 0, 0);
-  int testField[20][10] = {
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 1, 1, 1, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+  // int testField[20][10] = {
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 1, 1, 1, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+  //     {0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-  game.field = new int *[20];
-  for (int i = 0; i < 20; i++) {
-    game.field[i] = new int[10];
-    for (int j = 0; j < 10; j++) {
-      game.field[i][j] = testField[i][j];
-    }
-  }
+  // game.field = new int *[20];
+  // for (int i = 0; i < 20; i++) {
+  //   game.field[i] = new int[10];
+  //   for (int j = 0; j < 10; j++) {
+  //     game.field[i][j] = testField[i][j];
+  //   }
+  // }
+
   int **coordinat = game.field;
-  for (int i{}; i < 20; ++i) {
-    for (int j{}; j < 10; ++j) {
+  for (int i{}; i < 19; ++i) {
+    for (int j{}; j < 9; ++j) {
       if (coordinat[i][j]) {
         mvwaddch(field, i + 1, j + 1, '#');
+        // mvwaddch(field, i + 1, j + 1, '#');
       }
     }
   }

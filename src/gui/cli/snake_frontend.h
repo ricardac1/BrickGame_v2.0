@@ -3,20 +3,19 @@
 
 #include <ncurses.h>
 
-// #include "../../brick_game/snake/controller/controller.h"
-#include "../../brick_game/common/common.h"
+#include "../../brick_game/snake/controller/controller.h"
+// #include "../../brick_game/common/common.h"
 
 namespace s21 {
 
 class SnakeNcurses {
  private:
-  // Controller *controller;
+  Controller *controller;
 
  public:
-  // SnakeNcurses(Controller *controller);
-
-  SnakeNcurses() {};
-  ~SnakeNcurses() {};
+  SnakeNcurses(Controller *controller);
+  // SnakeNcurses(Controller *c) : controller{c} {};
+  ~SnakeNcurses();
 
   void startSnake();
   void drawField(WINDOW *field, GameInfo_t game);
