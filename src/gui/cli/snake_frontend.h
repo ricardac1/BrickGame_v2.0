@@ -21,6 +21,7 @@ class SnakeNcurses {
   void startSnake();
   void drawField(WINDOW *field, GameInfo_t game);
   void drawInfo(WINDOW *info, GameInfo_t game);
+  UserAction_t keyAction(int key);
 };
 
 }  // namespace s21

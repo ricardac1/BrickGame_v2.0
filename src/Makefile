@@ -63,9 +63,9 @@ libtetris.a:
 desktop:
 	rm -rf desk
 	mkdir desk
-# cd desk && qmake ../gui/desktop
-# cd desk && make
-# mv desk/desktop.app build
+#	cd desk && qmake ../gui/desktop
+#	cd desk && make
+#	mv desk/desktop.app build
 	rm -rf desk
 
 start:
