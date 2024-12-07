@@ -39,6 +39,8 @@ class SnakeGame {
 
   void randomApple(void);
   void connectAppleAndField(void);
+  void loadMaxScore();
+  void saveScore();
 };
 }  // namespace s21
 #endif  //  SRC_BRICK_GAME_MODEL

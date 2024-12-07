@@ -218,7 +218,7 @@ void SaveScore(TState *state) {
   }
 }
 void LoadMaxScore(TState *state) {
-  FILE *file = fopen("score.txt", "r");
+  FILE *file = fopen("tetris_score.txt", "r");
   if (file) {
     if (fscanf(file, "%d", &state->maxScore) != 1) {
       state->maxScore = 0;

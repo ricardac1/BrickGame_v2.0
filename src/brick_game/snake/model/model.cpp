@@ -1,11 +1,10 @@
 #include "model.h"
-
 namespace s21 {
 
 Point Point::randomPoint() {
   Point random;
-  random.x = rand() % 20;  // Например, от 0 до 19
-  random.y = rand() % 10;
+  random.x = rand() % 10;  // Например, от 0 до 19
+  random.y = rand() % 20;
 
   return random;
 }
@@ -16,10 +15,12 @@ void SnakeGame::randomApple() {
   apple.y = tmp.y;
 }
 
-void SnakeGame::connectAppleAndField(void) { info.field[apple.y][apple.x] = 1; }
 // class SnakeGame
 SnakeGame::SnakeGame() {
   randomApple();
+  loadMaxScore();
+  info.score = info.level = 0;
+  info.speed = 600;
 
   info.field = new int *[HEIGTH];
   for (int i{}; i < HEIGTH; ++i) {
@@ -34,4 +35,28 @@ SnakeGame::~SnakeGame() {
   }
   delete[] info.field;
 }
-}  // namespace s21
+
+void SnakeGame::connectAppleAndField(void) { info.field[apple.y][apple.x] = 1; }
+
+void SnakeGame::loadMaxScore() {
+  FILE *file = fopen("snake_score.txt", "r");
+  if (file) {
+    fscanf(file, "%d", &info.high_score);
+    fclose(file);
+  } else {
+    saveScore();
+    perror("Error opening file");
+  }
+}
+
+void SnakeGame::saveScore() {
+  FILE *file = fopen("snake_score.txt", "w");
+  if (file) {
+    fprintf(file, "%d", &info.high_score);
+    fclose(file);
+  } else {
+    perror("Error opening file");
+  }
+}
+
+};  // namespace s21

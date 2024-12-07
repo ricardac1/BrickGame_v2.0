@@ -79,11 +79,10 @@ void SnakeNcurses::drawField(WINDOW *field, GameInfo_t game) {
   // }
 
   int **coordinat = game.field;
-  for (int i{}; i < 19; ++i) {
-    for (int j{}; j < 9; ++j) {
+  for (int i{}; i < HEIGTH; ++i) {
+    for (int j{}; j < WIDTH; ++j) {
       if (coordinat[i][j]) {
-        mvwaddch(field, i + 1, j + 1, '#');
-        // mvwaddch(field, i + 1, j + 1, '#');
+        mvwaddch(field, i + 1, j * 2 + 1, '#');
       }
     }
   }
