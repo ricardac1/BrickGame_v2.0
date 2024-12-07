@@ -12,6 +12,8 @@ namespace s21 {
 #define WIDTH 10
 #define HEIGTH 20
 
+typedef enum { StartGame, Spawn, Moving, Shifting, End } GameState;
+
 class Point {
  public:
   int x, y;
@@ -34,13 +36,22 @@ class SnakeGame {
  public:
   SnakeGame();
   ~SnakeGame();
+
+  GameState snake_state;
+  std::vector<Point> snake;
   GameInfo_t info;
   Point apple;
+  bool start;
 
-  void randomApple(void);
-  void connectAppleAndField(void);
+  void randomApple();
+  void connectApple();
   void loadMaxScore();
   void saveScore();
+  void snakeVector();
+  void connectSnake();
+  void moveSnake(UserAction_t action);
+  void clearField();
+  GameInfo_t connectFiguresAndField();
 };
 }  // namespace s21
 #endif  //  SRC_BRICK_GAME_MODEL

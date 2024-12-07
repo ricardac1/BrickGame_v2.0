@@ -34,18 +34,18 @@ install: clean cli desktop
 
 cli: libtetris.a libsnake.a
 	mkdir build
-	gcc $(GCC_FLAGS) -c $(FRONTEND_CLI)/*.c -lncurses 
-	g++ $(G++_FLAGS) -c $(FRONTEND_CLI)/*.cpp -lncurses 
-	cd build && g++ $(G++_FLAGS) -o $(PROJECT_NAME)_cli ../*.o  -lncurses -L./.. -ltetris  -lsnake 
+	gcc  $(GCC_FLAGS) -c $(FRONTEND_CLI)/*.c -lncurses 
+	g++  $(G++_FLAGS) -c $(FRONTEND_CLI)/*.cpp -lncurses 
+	cd build && g++ -g $(G++_FLAGS) -o $(PROJECT_NAME)_cli ../*.o  -lncurses -L./.. -ltetris  -lsnake 
 	rm -rf *.o *.a
 
 libsnake.a:
-	g++ $(G++_FLAGS) -c $(MODEL_SNAKE)/*.cpp $(CONTROLLER_SNAKE)/*.cpp 
+	g++  -g $(G++_FLAGS) -c $(MODEL_SNAKE)/*.cpp $(CONTROLLER_SNAKE)/*.cpp 
 	ar rc libsnake.a *.o
 	rm -rf *.o
 
 libtetris.a:
-	gcc $(GCC_FLAGS) -c $(BACKEND_TETRIS)/*.c 
+	gcc -g $(GCC_FLAGS) -c $(BACKEND_TETRIS)/*.c 
 	ar rc libtetris.a *.o
 	rm -rf *.o
 

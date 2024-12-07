@@ -8,10 +8,12 @@ void SnakeNcurses::startSnake() {
   WINDOW *field = newwin(22, 22, 0, 0);
   WINDOW *info = newwin(22, 18, 0, 22);
   int key = 0;
-  while (key != 27) {
+  while (controller->model->snake_state != End) {
+    timeout(50);
     key = getch();
-    GameInfo_t display = controller->updateCurrentState();
     UserAction_t user_input = keyAction(key);
+    controller->userInput(keyAction(key), 0);
+    GameInfo_t display = controller->updateCurrentState();
     drawField(field, display);
     drawInfo(info, display);
   }
@@ -42,10 +44,12 @@ UserAction_t SnakeNcurses::keyAction(int key) {
       action = Start;
       break;
     case 'q':
+    case 'Q':
       action = Terminate;
       break;
 
     case 'p':
+    case 'P':
       action = Pause;
       break;
 

@@ -17,16 +17,21 @@ void SnakeGame::randomApple() {
 
 // class SnakeGame
 SnakeGame::SnakeGame() {
-  randomApple();
-  loadMaxScore();
   info.score = info.level = 0;
   info.speed = 600;
+  snake_state = StartGame;
+
+  randomApple();
+  loadMaxScore();
+  snakeVector();
 
   info.field = new int *[HEIGTH];
   for (int i{}; i < HEIGTH; ++i) {
     info.field[i] = new int[WIDTH]{};
   }
-  connectAppleAndField();
+
+  connectSnake();
+  connectApple();
 }
 
 SnakeGame::~SnakeGame() {
@@ -35,8 +40,6 @@ SnakeGame::~SnakeGame() {
   }
   delete[] info.field;
 }
-
-void SnakeGame::connectAppleAndField(void) { info.field[apple.y][apple.x] = 1; }
 
 void SnakeGame::loadMaxScore() {
   FILE *file = fopen("snake_score.txt", "r");
@@ -59,4 +62,61 @@ void SnakeGame::saveScore() {
   }
 }
 
-};  // namespace s21
+void SnakeGame::clearField() {
+  for (int i{}; i < HEIGTH; ++i) {
+    for (int j{}; j < WIDTH; ++j) {
+      info.field[i][j] = 0;
+    }
+  }
+}
+
+void SnakeGame::snakeVector() {
+  snake.clear();
+  snake.push_back(Point{WIDTH / 2, HEIGTH / 2});
+  snake.push_back(Point{WIDTH / 2, HEIGTH / 2 - 1});
+  snake.push_back(Point{WIDTH / 2, HEIGTH / 2 - 2});
+  snake.push_back(Point{WIDTH / 2, HEIGTH / 2 - 3});
+}
+
+void SnakeGame::connectApple() { info.field[apple.y][apple.x] = 1; }
+void SnakeGame::connectSnake() {
+  for (auto iter = snake.begin(); iter != snake.end(); ++iter) {
+    int x = (*iter).x;
+    int y = (*iter).y;
+    info.field[y][x] = 1;
+  }
+}
+
+GameInfo_t SnakeGame::connectFiguresAndField() {
+  clearField();
+  connectApple();
+  connectSnake();
+  return info;
+}
+
+void SnakeGame::moveSnake(UserAction_t action) {
+  if (!info.pause && start) {
+    Point direction{snake.front()};
+    switch (action) {
+      case Up:
+        direction.y -= 1;
+        break;
+      case Down:
+        direction.y += 1;
+        break;
+      case Right:
+        direction.x += 1;
+        break;
+      case Left:
+        direction.x -= 1;
+        break;
+      default:
+        break;
+    }
+    snake.insert(snake.begin(), direction);
+    // snake.pop_back();
+  }
+
+  connectFiguresAndField();
+}
+}  // namespace s21
