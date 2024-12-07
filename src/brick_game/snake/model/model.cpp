@@ -95,27 +95,26 @@ GameInfo_t SnakeGame::connectFiguresAndField() {
 }
 
 void SnakeGame::moveSnake(UserAction_t action) {
-  if (!info.pause && start) {
-    Point direction{snake.front()};
-    switch (action) {
-      case Up:
-        direction.y -= 1;
-        break;
-      case Down:
-        direction.y += 1;
-        break;
-      case Right:
-        direction.x += 1;
-        break;
-      case Left:
-        direction.x -= 1;
-        break;
-      default:
-        break;
-    }
-    snake.insert(snake.begin(), direction);
-    // snake.pop_back();
+  Point direction{snake.front()};
+  switch (action) {
+    case Up:
+      direction.y -= 1;
+      break;
+    case Down:
+      direction.y += 1;
+      break;
+    case Right:
+      direction.x += 1;
+      break;
+    case Left:
+      direction.x -= 1;
+      break;
+    default:
+      break;
+
+      // snake.pop_back();
   }
+  snake.insert(snake.begin(), direction);
 
   connectFiguresAndField();
 }

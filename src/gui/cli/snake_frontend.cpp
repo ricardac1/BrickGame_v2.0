@@ -9,7 +9,6 @@ void SnakeNcurses::startSnake() {
   WINDOW *info = newwin(22, 18, 0, 22);
   int key = 0;
   while (controller->model->snake_state != End) {
-    timeout(50);
     key = getch();
     UserAction_t user_input = keyAction(key);
     controller->userInput(keyAction(key), 0);
