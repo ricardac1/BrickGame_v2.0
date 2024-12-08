@@ -13,6 +13,7 @@ namespace s21 {
 #define HEIGTH 20
 
 typedef enum { StartGame, Spawn, Moving, Shifting, End } GameState;
+typedef enum { UpRoute, DownRoute, RightRoute, LeftRoute } Direction;
 
 class Point {
  public:
@@ -42,6 +43,8 @@ class SnakeGame {
   GameInfo_t info;
   Point apple;
   bool start;
+  Direction current_direction;
+  Direction next_direction;
 
   void randomApple();
   void connectApple();
@@ -49,9 +52,10 @@ class SnakeGame {
   void saveScore();
   void snakeVector();
   void connectSnake();
-  void moveSnake(UserAction_t action);
+  void moveSnake();
   void clearField();
-  GameInfo_t connectFiguresAndField();
+  GameInfo_t updateFiguresAndField();
+  void startGameInfo();
 };
 }  // namespace s21
 #endif  //  SRC_BRICK_GAME_MODEL

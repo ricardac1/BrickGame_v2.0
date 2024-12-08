@@ -9,6 +9,7 @@ void SnakeNcurses::startSnake() {
   WINDOW *info = newwin(22, 18, 0, 22);
   int key = 0;
   while (controller->model->snake_state != End) {
+    timeout(500);
     key = getch();
     UserAction_t user_input = keyAction(key);
     controller->userInput(keyAction(key), 0);
@@ -61,26 +62,6 @@ UserAction_t SnakeNcurses::keyAction(int key) {
 void SnakeNcurses::drawField(WINDOW *field, GameInfo_t game) {
   werase(field);
   box(field, 0, 0);
-  // int testField[20][10] = {
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 1, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 1, 1, 1, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-  //     {0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  //     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-
-  // game.field = new int *[20];
-  // for (int i = 0; i < 20; i++) {
-  //   game.field[i] = new int[10];
-  //   for (int j = 0; j < 10; j++) {
-  //     game.field[i][j] = testField[i][j];
-  //   }
-  // }
-
   int **coordinat = game.field;
   for (int i{}; i < HEIGTH; ++i) {
     for (int j{}; j < WIDTH; ++j) {

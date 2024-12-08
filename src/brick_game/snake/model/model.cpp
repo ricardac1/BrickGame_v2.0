@@ -20,8 +20,10 @@ SnakeGame::SnakeGame() {
   info.score = info.level = 0;
   info.speed = 600;
   snake_state = StartGame;
+  current_direction = DownRoute;
+  next_direction = DownRoute;
 
-  randomApple();
+  // randomApple();
   loadMaxScore();
   snakeVector();
 
@@ -87,35 +89,44 @@ void SnakeGame::connectSnake() {
   }
 }
 
-GameInfo_t SnakeGame::connectFiguresAndField() {
+GameInfo_t SnakeGame::updateFiguresAndField() {
   clearField();
   connectApple();
   connectSnake();
   return info;
 }
 
-void SnakeGame::moveSnake(UserAction_t action) {
+void SnakeGame::moveSnake() {
   Point direction{snake.front()};
-  switch (action) {
-    case Up:
+  switch (next_direction) {
+    case UpRoute:
       direction.y -= 1;
       break;
-    case Down:
+    case DownRoute:
       direction.y += 1;
       break;
-    case Right:
+    case RightRoute:
       direction.x += 1;
       break;
-    case Left:
+    case LeftRoute:
       direction.x -= 1;
       break;
     default:
       break;
-
-      // snake.pop_back();
   }
   snake.insert(snake.begin(), direction);
+  snake.pop_back();
+  current_direction = next_direction;
+  updateFiguresAndField();
+}
 
-  connectFiguresAndField();
+void SnakeGame::startGameInfo() {
+  snake.clear();
+  clearField();
+  current_direction = DownRoute;
+  next_direction = DownRoute;
+  randomApple();
+  snakeVector();
+  updateFiguresAndField();
 }
 }  // namespace s21

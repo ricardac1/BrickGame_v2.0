@@ -19,23 +19,57 @@ void Controller::userInput(UserAction_t action, bool hold) {
       model->snake_state = End;
       break;
     case Up:
-      model->moveSnake(action);
+      if (model->current_direction != DownRoute) {
+        model->next_direction = UpRoute;
+      }
       break;
     case Down:
-      model->moveSnake(action);
+      if (model->current_direction != UpRoute) {
+        model->next_direction = DownRoute;
+      }
       break;
     case Right:
-      model->moveSnake(action);
+      if (model->current_direction != LeftRoute) {
+        model->next_direction = RightRoute;
+      }
+
       break;
     case Left:
-      model->moveSnake(action);
+      if (model->current_direction != RightRoute) {
+        model->next_direction = LeftRoute;
+      }
+
       break;
     default:
       break;
   }
 }
 GameInfo_t Controller::updateCurrentState() {
-  auto pause = model->info.pause;
+  if (!model->info.pause && model->start) {
+    switch (model->snake_state) {
+      case StartGame:
+        model->startGameInfo();
+        model->snake_state = Moving;
+        break;
+      case Spawn:
+        model->randomApple();
+        model->snake_state = Moving;
+        break;
+      case Shifting:
+        model->moveSnake();
+        break;
+      case Moving:
+        model->snake_state = Shifting;
+        break;
+      case End:
+        model->clearField();
+        model->snake.clear();
+        break;
+      default:
+        break;
+    }
+  }
+  model->updateFiguresAndField();
   return model->info;
 }
 
