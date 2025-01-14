@@ -27,14 +27,14 @@ typedef enum { START, PLAYING, PAUSED, GAME_OVER, EXIT } GameState;
 typedef struct {
   int field[FIELD_HEIGHT][FIELD_WIDTH];         // Поле для игры
   int currentFigure[FIGURE_SIZE][FIGURE_SIZE];  // Текущая фигура
-  int nextFigure[FIGURE_SIZE][FIGURE_SIZE];     // Следующая фигура
-  int figureX;                                  // Позиция фигуры по оси X
-  int figureY;                                  // Позиция фигуры по оси Y
-  int score;                                    // Текущий счёт
+  int nextFigure[FIGURE_SIZE][FIGURE_SIZE];  // Следующая фигура
+  int figureX;         // Позиция фигуры по оси X
+  int figureY;         // Позиция фигуры по оси Y
+  int score;           // Текущий счёт
   bool isFigureFixed;  // Зафиксирована ли фигура на поле
   int maxScore;        // Максимальный счёт
   int level;           // Текущий уровень
-  GameState state;     // Текущее состояние игры
+  GameState state;  // Текущее состояние игры
 } TState;
 
 /**

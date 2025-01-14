@@ -24,20 +24,19 @@ class TetrisUI : public QWidget {
   void paintEvent(QPaintEvent *e) override;
   void keyPressEvent(QKeyEvent *e) override;
 
-
  private:
   QTimer *timer;
   TState *state;
 
-  void DrawGameArea(QPainter &p);
-  void DrawStartScreen(QPainter &p);
-  void DrawGameField(QPainter &p);
-  void DrawPauseScreen(QPainter &p);
-  void DrawGameOverScreen(QPainter &p);
-  void DrawNextFigure(QPainter &p);
-  void DrawMaxScore(QPainter &p);
-  void DrawScore(QPainter &p);
-  void DrawLevel(QPainter &p);
+  void drawGameArea(QPainter &p);
+  void drawStartScreen(QPainter &p);
+  void drawGameField(QPainter &p);
+  void drawPauseScreen(QPainter &p);
+  void drawGameOverScreen(QPainter &p);
+  void drawNextFigure(QPainter &p);
+  void drawMaxScore(QPainter &p);
+  void drawScore(QPainter &p);
+  void drawLevel(QPainter &p);
 
  private slots:
   void update_paint(void);

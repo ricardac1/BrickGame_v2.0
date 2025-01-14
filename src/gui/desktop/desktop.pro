@@ -13,12 +13,19 @@ SOURCES += \
     mainwindow.cpp \
     tetrusUI.cpp \
     ../../brick_game/tetris/backend.c \
+    ../../brick_game/snake/controller/controller.cpp \
+    ../../brick_game/snake/model/model.cpp \
+    snakeUI.cpp \
+
 
 HEADERS += \
-    New Folder/tetris.h \
     mainwindow.h \
     tetrisUI.h \
     ../../brick_game/tetris/backend.h \
+    ../../brick_game/snake/controller/controller.h \
+    ../../brick_game/snake/model/model.h \
+    ../../brick_game/commom/common.h \
+    snakeUI.h \
 
 
 FORMS += \

@@ -209,7 +209,7 @@ void Score(TState *state, int linesdel) {
   }
 }
 void SaveScore(TState *state) {
-  FILE *file = fopen("score.txt", "w");
+  FILE *file = fopen("tetris_score.txt", "w");
   if (file) {
     fprintf(file, "%d", state->maxScore);
     fclose(file);

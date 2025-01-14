@@ -4,7 +4,6 @@
 #include <ncurses.h>
 
 #include "../../brick_game/snake/controller/controller.h"
-// #include "../../brick_game/common/common.h"
 
 namespace s21 {
 
@@ -14,7 +13,6 @@ class SnakeNcurses {
 
  public:
   SnakeNcurses(Controller *controller);
-  // SnakeNcurses(Controller *c) : controller{c} {};
   ~SnakeNcurses();
 
   void startSnake();

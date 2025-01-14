@@ -5,7 +5,6 @@ Controller::Controller(SnakeGame *model) : model{model} {}
 Controller::~Controller() {}
 
 void Controller::userInput(UserAction_t action, bool hold) {
-  auto state = model->snake_state;
   auto pause = model->info.pause;
 
   switch (action) {
@@ -38,28 +37,30 @@ void Controller::userInput(UserAction_t action, bool hold) {
       if (model->current_direction != RightRoute) {
         model->next_direction = LeftRoute;
       }
-
+      break;
+    case Action:
+      if (hold) {
+        model->moveSnake();
+      }
       break;
     default:
       break;
   }
 }
+
 GameInfo_t Controller::updateCurrentState() {
   if (!model->info.pause && model->start) {
     switch (model->snake_state) {
       case StartGame:
         model->startGameInfo();
-        model->snake_state = Moving;
+        model->snake_state = Shifting;
         break;
       case Spawn:
         model->randomApple();
-        model->snake_state = Moving;
+        model->snake_state = Shifting;
         break;
       case Shifting:
         model->moveSnake();
-        break;
-      case Moving:
-        model->snake_state = Shifting;
         break;
       case End:
         model->clearField();

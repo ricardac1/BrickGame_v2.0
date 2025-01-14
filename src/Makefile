@@ -1,4 +1,4 @@
-GCC_FLAGS =  -std=c11
+GCC_FLAGS =  -std=c11  -Wall -Wextra -Werror
 G++_FLAGS =  -std=c++17 #-Wall -Wextra -Werror
 # Папки поиска
 SRC_DIRS = .
@@ -8,25 +8,26 @@ TEST_OBJ_DIR = ./tests/objs
 BUILD_PATH = gcov_report/
 REPORT_PATH = $(BUILD_PATH)report/
 TEST_CPP_FILES := $(wildcard $(TEST_DIR)/*.cpp)
-EXE = test.out
 PROJECT_NAME=BrickGame_v2.0
 BACKEND_TETRIS=brick_game/tetris
 BACKEND_SNAKE=brick_game/snake
 MODEL_SNAKE=$(BACKEND_SNAKE)/model
 CONTROLLER_SNAKE=$(BACKEND_SNAKE)/controller
 FRONTEND_CLI=gui/cli
+BUILD_DIR_TEST = ./build_test
+COVERAGE_FLAGS=-fprofile-arcs -ftest-coverage
 
 
-OS := $(shell uname)
-
-ifeq ($(OS),Linux)
+ifeq ($(shell uname -s), Linux)
+	TEST_FLAGS = -lcheck -lpthread -pthread -lm  -lrt -lsubunit
 	OPEN = xdg-open
-	TEST_FLAGS = -lgtest -lgtest_main -lrt -lm -pthread
-endif
-ifeq ($(OS),Darwin)
+	LDFLAGS := -lncursesw
+else
+	TEST_FLAGS = -lcheck -lpthread -pthread -lm 
+	LDFLAGS := -lncurses
 	OPEN = open
-	TEST_FLAGS = -L$(GTEST_PATH)/lib -lgtest -lgtest_main -lpthread
 endif
+
 
 all: clean install
 
@@ -52,51 +53,57 @@ libtetris.a:
 desktop:
 	rm -rf desk
 	mkdir desk
-#	cd desk && qmake ../gui/desktop
-#	cd desk && make
-#	mv desk/desktop.app build
+	cd desk && qmake ../gui/desktop
+	cd desk && make
+	mv desk/desktop.app/Contents/MacOS/desktop build
 	rm -rf desk
 
-start:
-	cd build && ./$(PROJECT_NAME)_cli
+unistall:
+	rm -rf build
 
+dvi: clean
+	open ./dvi/Documentation.html
+
+dist: install
+	tar -cvzf $(PROJECT_NAME).tgz build
+	rm -rf build
+
+startCli:
+	cd build && ./$(PROJECT_NAME)_cli
+startUi:
+	cd build && ./desktop
+
+test: clean test_snake test_tetris
 	
 
-# test: $(OBJS_TEST_FILES)
-# 	g++ $(OBJS_TEST_FILES) $(TEST_FLAGS) -o $(EXE)
-# 	./$(EXE)
+test_tetris: 
+	@mkdir -p $(BUILD_DIR_TEST)
+	gcc -DTEST_MODE $(GCC_FLAGS) $(COVERAGE_FLAGS) $(TEST_DIR)/*.c $(BACKEND_TETRIS)/*.c  -o $(BUILD_DIR_TEST)/tetris -lncurses $(TEST_FLAGS)
+	./$(BUILD_DIR_TEST)/tetris
 
-# # Компиляция исходных файлов в объектные
-# $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
-# 	mkdir -p $(dir $@)
-# 	g++ $(GCC_FLAGS) -c $< -o $@
+test_snake: 
+	@mkdir -p $(BUILD_DIR_TEST)
+	g++ $(G++_FLAGS) $(COVERAGE_FLAGS)  $(TEST_DIR)/*.cpp $(BACKEND_SNAKE)/*/*.cpp -o $(BUILD_DIR_TEST)/snake -lgtest
+	./$(BUILD_DIR_TEST)/snake
 
-# # Компиляция тестовых файлов в объектные
-# $(TEST_OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp | $(TEST_OBJ_DIR)
-# 	mkdir -p $(dir $@)
-# 	g++ $(GCC_FLAGS) -c $< -o $@
 
-# # Создание директории для объектных файлов, если она не существует
-# $(OBJ_DIR) $(TEST_OBJ_DIR):
-# 	mkdir -p $@
+gcov_report: test
+	lcov -t "test" -o $(BUILD_DIR_TEST)test.info -c -d . --no-external --ignore-errors mismatch,mismatch,inconsistent
+	genhtml -o report $(BUILD_DIR_TEST)test.info
+	open ./report/index.html
 
-gcov_report: build_dir
-	mkdir -p $(REPORT_PATH)
-	g++ $(GCC_FLAGS) --coverage $(SRC_CPP_FILES) $(TEST_CPP_FILES) -o $(BUILD_PATH)$(EXE) $(TEST_FLAGS) -fprofile-instr-generate -fcoverage-mapping
-	chmod +x $(BUILD_PATH)$(EXE)
-	$(BUILD_PATH)$(EXE)
-	lcov -t "Report" --directory . --capture --output-file $(BUILD_PATH)coverage.info --ignore-errors empty,inconsistent --no-external
-	genhtml --ignore-errors inconsistent --ignore-errors corrupt $(BUILD_PATH)coverage.info --output-directory $(REPORT_PATH)
-	$(OPEN) $(REPORT_PATH)index.html
-
-build_dir:
-	mkdir -p $(BUILD_PATH)
 
 clean:
 	rm -rf $(OBJ_DIR) $(TEST_OBJ_DIR) $(EXE) *.a *.out *.gc* *.info *.profraw *.o $(BUILD_PATH) 
 	rm -rf $(REPORT_PATH)
 	rm -rf *.o
 	rm -rf build
+	rm -rf $(BUILD_DIR_TEST)
+	rm -rf report
+	rm -rf *.txt
+	rm -rf *.tgz
+
+rebuild: clean cli
 
 docker_build:
 	cp ../materials/linters/.clang-format ./
@@ -111,15 +118,17 @@ docker_delete:
 	docker image rm vault:v1
 
 valgrind: rebuild
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=leaks_log.txt ./$(EXE)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=leaks_log.txt ./build/$(PROJECT_NAME)_cli
 	echo --- Valgrind summary --- && cat leaks_log.txt | grep 'total heap usage' && cat leaks_log.txt | grep 'ERROR SUMMARY'
 
 style_test:
 	cp ../materials/linters/.clang-format .
-	clang-format -n *.cpp *.h */*.cpp
+	clang-format -n ./*/*/*.c ./*/*/*.h ./*/*/*.cpp
+	clang-format -n ./*/*/*/*.h ./*/*/*/*.cpp
 	rm .clang-format
 
 format_style:
 	cp ../materials/linters/.clang-format .
-	clang-format -i */*.cpp
+	clang-format -i ./*/*/*.c ./*/*/*.h ./*/*/*.cpp
+	clang-format -i ./*/*/*/*.h ./*/*/*/*.cpp
 	rm .clang-format

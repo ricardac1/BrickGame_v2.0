@@ -4,6 +4,7 @@ FROM ubuntu
 # обновляем apt пакеты и устанавливаем по очереди нужные зависимости
 RUN apt-get update && apt-get install -y \
     gcc \
+    g++ \
     make \
     valgrind \
     vim \
@@ -13,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     lcov \
     clang-format \
     libpcre3 \
-    libpcre3-dev 
+    libpcre3-dev \
+    libgtest-dev
 
 COPY . /code
 

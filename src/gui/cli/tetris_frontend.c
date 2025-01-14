@@ -75,9 +75,9 @@ void DrawSquare(int y, int x, int width, int height) {
     mvaddch(y + i, x + width - 1, ACS_VLINE);  // Правая граница
   }
   // Углы прямоугольника
-  mvaddch(y, x, ACS_ULCORNER);                           // Левый верхний угол
-  mvaddch(y, x + width - 1, ACS_URCORNER);               // Правый верхний угол
-  mvaddch(y + height - 1, x, ACS_LLCORNER);              // Левый нижний угол
+  mvaddch(y, x, ACS_ULCORNER);  // Левый верхний угол
+  mvaddch(y, x + width - 1, ACS_URCORNER);  // Правый верхний угол
+  mvaddch(y + height - 1, x, ACS_LLCORNER);  // Левый нижний угол
   mvaddch(y + height - 1, x + width - 1, ACS_LRCORNER);  // Правый нижний угол
 
   refresh();  // Обновляем экран

@@ -1,10 +1,11 @@
 #ifndef SRC_BRICK_GAME_MODEL
 #define SRC_BRICK_GAME_MODEL
 
-#include <algorithm>
-#include <cstdlib>  // Для rand() и srand()
-#include <ctime>    // Для time()
+#include <chrono>
+#include <cstdlib>
+#include <ctime>
 #include <random>
+#include <thread>
 
 #include "../../common/common.h"
 namespace s21 {
@@ -12,7 +13,7 @@ namespace s21 {
 #define WIDTH 10
 #define HEIGTH 20
 
-typedef enum { StartGame, Spawn, Moving, Shifting, End } GameState;
+typedef enum { StartGame, Spawn, Moving, Shifting, End, GameOver } GameState;
 typedef enum { UpRoute, DownRoute, RightRoute, LeftRoute } Direction;
 
 class Point {
@@ -29,8 +30,7 @@ class Point {
     return *this;
   }
 
-  // Point randomPoint(std::vector<Point>& snake);
-  Point randomPoint();
+  Point randomPoint(std::vector<Point>& snake);
 };
 
 class SnakeGame {
@@ -48,7 +48,7 @@ class SnakeGame {
 
   void randomApple();
   void connectApple();
-  void loadMaxScore();
+  int loadMaxScore();
   void saveScore();
   void snakeVector();
   void connectSnake();
@@ -56,6 +56,11 @@ class SnakeGame {
   void clearField();
   GameInfo_t updateFiguresAndField();
   void startGameInfo();
+  bool checkCrash();
+  bool checkBoard(int x, int y);
+  bool checkCrashBodySnake(int x, int y, std::vector<Point>& snake);
+  void updateScore();
+  void delaySnake(int milliseconds);
 };
 }  // namespace s21
 #endif  //  SRC_BRICK_GAME_MODEL

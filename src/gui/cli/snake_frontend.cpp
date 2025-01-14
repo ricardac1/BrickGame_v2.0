@@ -7,13 +7,24 @@ SnakeNcurses::~SnakeNcurses() {};
 void SnakeNcurses::startSnake() {
   WINDOW *field = newwin(22, 22, 0, 0);
   WINDOW *info = newwin(22, 18, 0, 22);
-  int key = 0;
+
   while (controller->model->snake_state != End) {
-    timeout(500);
-    key = getch();
-    UserAction_t user_input = keyAction(key);
-    controller->userInput(keyAction(key), 0);
+    timeout(controller->model->info.speed);
+    int key = getch();
+
+    keyAction(key);
+    controller->userInput(keyAction(key), 1);
     GameInfo_t display = controller->updateCurrentState();
+
+    if (controller->model->snake_state == GameOver) {
+      clear();
+      mvprintw(1, 1, "Game Over");
+      mvprintw(1, 2, "Max score: %d", display.high_score);
+      mvprintw(1, 3, "Press Q to Exit to Menu");
+      if (key == 'q' || key == 'Q') {
+        break;
+      }
+    }
     drawField(field, display);
     drawInfo(info, display);
   }
@@ -40,12 +51,17 @@ UserAction_t SnakeNcurses::keyAction(int key) {
     case KEY_RIGHT:
       action = Right;
       break;
-    case '\n':
+    case ' ':
       action = Start;
       break;
     case 'q':
     case 'Q':
       action = Terminate;
+      break;
+
+    case 'm':
+    case 'M':
+      action = Action;
       break;
 
     case 'p':
@@ -59,6 +75,7 @@ UserAction_t SnakeNcurses::keyAction(int key) {
 
   return action;
 };
+
 void SnakeNcurses::drawField(WINDOW *field, GameInfo_t game) {
   werase(field);
   box(field, 0, 0);
@@ -66,7 +83,8 @@ void SnakeNcurses::drawField(WINDOW *field, GameInfo_t game) {
   for (int i{}; i < HEIGTH; ++i) {
     for (int j{}; j < WIDTH; ++j) {
       if (coordinat[i][j]) {
-        mvwaddch(field, i + 1, j * 2 + 1, '#');
+        mvwaddch(field, i + 1, j * 2 + 1, ACS_CKBOARD);
+        mvwaddch(field, i + 1, j * 2 + 2, ACS_CKBOARD);
       }
     }
   }
@@ -81,11 +99,10 @@ void SnakeNcurses::drawInfo(WINDOW *info, GameInfo_t game) {
   mvwprintw(info, 5, 1, "LEVEL %d", game.level);
   mvwprintw(info, 7, 1, "SPEED %d", game.speed);
   if (game.pause) {
-    mvwprintw(info, 9, 1, "PAUSE");
+    mvwprintw(info, 15, 6, "PAUSE");
   }
-  UserAction_t draw_info;
-  if (draw_info == Start) {
-    mvwprintw(info, 14, 3, "Press ENTER");
+  if (controller->model->snake_state == StartGame) {
+    mvwprintw(info, 14, 3, "Press SPACE");
     mvwprintw(info, 15, 4, "to start");
   }
   wrefresh(info);

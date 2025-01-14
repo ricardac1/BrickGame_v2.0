@@ -20,7 +20,6 @@ int main() {
       s21::SnakeGame model{};
       s21::Controller controller{&model};
       s21::SnakeNcurses view{&controller};
-      // s21::SnakeNcurses view{};
       view.startSnake();
     } else if (key_g == 'Q' || key_g == 'q') {
       break;

@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+#include "snakeUI.h"
 #include "tetrisUI.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,6 +26,6 @@ class MainWindow : public QMainWindow {
  private:
   Ui::MainWindow *ui;
   TetrisUI *t;
-  // SnakeUI *s;
+  s21::SnakeUI *s;
 };
 #endif  // MAINWINDOW_H
